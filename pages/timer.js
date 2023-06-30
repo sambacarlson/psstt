@@ -12,24 +12,28 @@ export default function Timer() {
   const [paused, setPaused] = useState(false);
   const [submitIng, setSubmitIng] = useState(false);
 
+  const task = JSON.parse(router?.query?.tag)
+
   const submitTagTimer = () => {
-    setSubmitIng(true);
-    axios
-      .post("/api/timer", {
-        tag: router.query.tag,
-        time: timerRef.current.getTime(),
-      })
-      .then((res) => {
-        console.log(res.data);
-        timerRef.current.reset();
-        timerRef.current.pause();
-        setPaused(true);
-      })
-      .catch((err) => {
-        console.log(err)
-        alert(err?.response?.data || "Internal Server Error :)");
-      })
-      .finally(() => setSubmitIng(false));
+    timerRef.current.stop
+    const updatedTask = {
+      ...task,
+      finishTime: task.startTime + Math.round(timerRef.current.getTime())
+    }
+
+    setSubmitIng(true)
+
+    // console.log('updated task: ', updatedTask)
+    console.log('updating task...........')
+    axios.post(`/api/tag?id=${task._id}`, {
+      updatedTask
+    }).then(res => {
+      console.log('response data: ', res.data)
+    }).finally(() => {
+      setSubmitIng(false)
+      router.push('/')
+    }
+    )
   };
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export default function Timer() {
         onClick={submitTagTimer}
         isLoading={submitIng}
       >
-        Save for {router.query.tag}
+        Save for {task?.name}
       </Button>
     </VStack>
   );

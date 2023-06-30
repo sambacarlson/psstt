@@ -1,21 +1,24 @@
 import mongoose from "mongoose";
 const TimerSchema = new mongoose.Schema({
-  userId: {
+  dailyCheckId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'DailyCheck'
   },
-  date: {
+  name: {
     type: String,
     required: true,
   },
-  timeStamp: {
+  description: String,
+  estimatedTime: Number,
+  startTime: {
     type: Number,
-    required: true,
+    default: new Date()
   },
-  timerTags: {
-    type: [{}],
-    default: [],
+  finishTime: {
+    type: Number,
   },
+  screenshots: [String],
 });
 
 module.exports = mongoose.models

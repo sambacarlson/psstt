@@ -8,6 +8,7 @@ import { to_YY_MM_DD } from "../lib/util";
 export default function Home() {
   let curDate = new Date();
   const [date, setDate] = useState(to_YY_MM_DD(new Date()));
+
   return (
     <div>
       <VStack p={1} alignItems="left">

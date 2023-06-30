@@ -62,7 +62,7 @@ export default function Hero() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: "column", sm: "row" }}
           >
-            <Link href="/tags">
+            <Link href="/task">
               <a>
                 <Button
                   rounded={"full"}

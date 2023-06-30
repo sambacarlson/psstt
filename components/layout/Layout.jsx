@@ -21,16 +21,30 @@ import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { CgDarkMode } from "react-icons/cg";
-import { AiFillGithub } from "react-icons/ai";
+import axios from "axios";
 
 export default function WithSubnavigation({ children }) {
   const { isOpen, onToggle } = useDisclosure();
   const { toggleColorMode } = useColorMode();
   const session = useSession();
+
+  console.log('session: ',session)
+
+
+  const signout =  () => {
+    axios
+    .get("/api/dailyCheck")
+    .then((res) => {
+      console.log('response from signing out: ',res)
+      signOut()
+    })
+    .catch((err) => console.log(err))
+  }
   return (
     <Box>
       <HStack mx="auto" m={2}>
         {session?.data ? (
+          <>
           <Link href="/">
             <a>
               <Avatar
@@ -40,6 +54,20 @@ export default function WithSubnavigation({ children }) {
               />
             </a>
           </Link>
+          <Button
+            fontSize={"sm"}
+            fontWeight={600}
+            color={"white"}
+            bg={"pink.400"}
+            href={"#"}
+            _hover={{
+              bg: "pink.300",
+            }}
+            onClick={signout}
+          >
+            Sign Out
+          </Button>
+          </>
         ) : (
           <Button
             fontSize={"sm"}
@@ -50,7 +78,7 @@ export default function WithSubnavigation({ children }) {
             _hover={{
               bg: "pink.300",
             }}
-            onClick={() => signIn("google")}
+            onClick={() => signIn('google')}
           >
             Sign In
           </Button>
@@ -62,14 +90,6 @@ export default function WithSubnavigation({ children }) {
           fontSize="xx-large"
           mt="-10px"
         />
-        <a href="https://github.com/ats1999/time-stamp" target="_blank">
-          <IconButton
-            variant="unstyled"
-            icon={<Icon as={AiFillGithub} />}
-            fontSize="xx-large"
-            mt="0px"
-          />
-        </a>
       </HStack>
 
       {children}

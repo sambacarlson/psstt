@@ -7,10 +7,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   image: String,
-  tags: {
-    type: [String],
-    default: [],
-  },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
-module.exports = mongoose.models ? mongoose.models.User || mongoose.model('User', UserSchema):mongoose.model('User', UserSchema)
+module.exports = mongoose.models ? mongoose.models.User || mongoose.model('User', UserSchema) : mongoose.model('User', UserSchema)
