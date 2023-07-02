@@ -17,7 +17,7 @@ const TimerSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['automatic', 'manl'],
+    enum: ['automatic', 'manual'],
     default: 'automatic',
   },
   status: {

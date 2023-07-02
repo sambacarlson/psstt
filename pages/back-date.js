@@ -32,6 +32,7 @@ export default function BackDate() {
       dailyCheckId: session?.data?.dailyCheckId,
       name: taskName,
       description,
+      estimatedTime: (new Date(finishTime).getTime() - new Date(startTime).getTime()) / (1000 * 60),
       startTime: new Date(startTime).getTime(),
       finishTime: new Date(finishTime).getTime(),
       type: 'manual',

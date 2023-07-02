@@ -48,20 +48,12 @@ export default function Timer() {
 
   useEffect(() => {
     window.onbeforeunload = function (e) {
-      if (timerRef.current.getTime()) return "Do you want to lose this time?";
+      if (timerRef.current.getTime() || paused) {
+        console.log('timer ref: ', timerRef.current.getTime())
+        return "Do you want to lose this time?";
+      }
     };
-  }, []);
-
-  // useRandomInterval(() => console.log('randomly calling funciton'), 1000, 2000)
-
-  // useEffect(() => {
-  //   const takeScreenshot = async () => {
-  //     axios.get('/api/screenshot').then(res => {
-  //       console.log('response data: ', res.data)
-  //     })
-  //   }
-  //   takeScreenshot()
-  // }, [])
+  }, [paused]);
 
   const takeScreenshot = async () => {
     axios.get('/api/screenshot').then(res => {
@@ -70,7 +62,7 @@ export default function Timer() {
   }
 
 
-  useRandomInterval(() => takeScreenshot(), 1000 * 60 * 30, 1000 * 60 * 45)
+  useRandomInterval(() => !paused && takeScreenshot(), 1000 * 60 * 30, 10000 * 60 * 45)
 
   return (
     <VStack
@@ -114,13 +106,6 @@ export default function Timer() {
             >
               {paused ? "▶️" : "⏸️"}
             </Button>
-            {/* <div>
-              <button onClick={start}>Start</button>
-              <button onClick={pause}>Pause</button>
-              <button onClick={resume}>Resume</button>
-              <button onClick={stop}>Stop</button>
-              <button onClick={reset}>Reset</button>
-            </div> */}
           </React.Fragment>
         )}
       </CompoundTimer>
