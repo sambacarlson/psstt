@@ -18,6 +18,9 @@ import { useSession } from "next-auth/react";
 
 export default function Hero() {
   const session = useSession();
+
+
+  console.log('session in hero: ', session)
   return (
     <Container maxW={"7xl"}>
       <Stack
@@ -62,7 +65,7 @@ export default function Hero() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: "column", sm: "row" }}
           >
-            <Link href="/task">
+            {session?.data?.user && <Link href="/task">
               <a>
                 <Button
                   rounded={"full"}
@@ -77,8 +80,8 @@ export default function Hero() {
                   Track 🕒
                 </Button>
               </a>
-            </Link>
-            <Link href="/analytics-360">
+            </Link>}
+            {session?.data?.user?.isAdmin && <Link href="/analytics-360">
               <a>
                 <Button
                   rounded={"full"}
@@ -93,7 +96,7 @@ export default function Hero() {
                   Analytics 📈
                 </Button>
               </a>
-            </Link>
+            </Link>}
           </Stack>
         </Stack>
         <Flex

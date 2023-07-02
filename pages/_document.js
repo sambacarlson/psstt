@@ -7,7 +7,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* Put any code <head> code that is comman for all pages, like x-frame options, etc... */}
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.png" />
           <meta name="application-name" content="TimeStamp" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta

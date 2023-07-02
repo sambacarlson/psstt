@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Timer from 'modals/Timers'
 const DailyCheckSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,8 +17,21 @@ const DailyCheckSchema = new mongoose.Schema({
   logoutTime: {
     type: Number,
   },
-  timers: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Timer' }],
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 });
+
+// DailyCheckSchema.virtual("timers", {
+//   ref: "Timer",
+//   foreignField: "dailyCheckId",
+//   localField: "_id",
+// });
+
+// DailyCheckSchema.pre(/^find/, function (next) {
+//   this.populate("timers");
+//   next();
+// });
 
 module.exports = mongoose.models
   ? mongoose.models.DailyCheck || mongoose.model("DailyCheck", DailyCheckSchema)

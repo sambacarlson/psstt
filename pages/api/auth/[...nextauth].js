@@ -19,63 +19,69 @@ export default NextAuth({
     async signIn({ user, account, profile, email, credentials }) {
       return true;
     },
+
     async session({ session }) {
       if (!session) return session;
 
-      console.log('creating new user on session: ',session)
+      console.log('checking user on session: ', session)
 
       // connect DB
       await DB();
       // check if the user is already present or not
       const isUser = await User.findOne({ email: session?.user?.email });
       if (isUser) {
-        console.log('user already exists: ',isUser)
+        console.log('user already exists: ', isUser)
         session.user._id = isUser._id;
+        session.user.isAdmin = isUser?.isAdmin
 
         let userDailyCheck;
-        const dailyCheckFound = await DailyCheck.findOne({userId: isUser._id, date: to_YY_MM_DD(new Date())})
+        const dailyCheckFound = await DailyCheck.findOne({ userId: isUser._id, date: to_YY_MM_DD(new Date()) })
 
-        if(!dailyCheckFound){
+        if (!dailyCheckFound) {
           const dailyCheck = new DailyCheck({
-           userId: isUser._id,
-           date: to_YY_MM_DD(new Date()),
-           loginTime: new Date(),
-          });  
-          
+            userId: isUser._id,
+            date: to_YY_MM_DD(new Date()),
+            loginTime: new Date(),
+          });
+
           userDailyCheck = await dailyCheck.save()
-        }else{
+        } else {
           userDailyCheck = dailyCheckFound
         }
 
 
         session.dailyCheckId = userDailyCheck._id
+        console.log('session at the end: ', session)
         return session;
       }
 
-    try {
+      try {
         // create a new user
         const user = new User({
           email: session.user.email,
           image: session.user.image,
           name: session.user.name,
         });
-       const userCreated =  await user.save();
+        const userCreated = await user.save();
 
 
-       const dailyCheck = new DailyCheck({
-        userId: userCreated._id,
-        date: to_YY_MM_DD(new Date()),
-        loginTime: new Date(),
-       });  
+        const dailyCheck = new DailyCheck({
+          userId: userCreated._id,
+          date: to_YY_MM_DD(new Date()),
+          loginTime: new Date(),
+        });
 
-       const userDailyCheck = await dailyCheck.save()
-  
+        const userDailyCheck = await dailyCheck.save()
+
         session.user._id = userCreated._id;
+        session.user.isAdmin = userCreated.isAdmin
         session.dailyCheckId = userDailyCheck._id
+
+        console.log('session at the end: ', session)
         return session;
-    } catch (error) {
-      console.log('error creating user: ',error)
-    }
+      } catch (error) {
+        console.log('error creating user: ', error)
+      }
     },
   },
   debug: true,

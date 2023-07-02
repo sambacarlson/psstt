@@ -21,7 +21,7 @@ export default async function tag(req, res) {
     res.send(taskUpdated)
   }
   else {
-    console.log('request when creating timer: ', req)
+    console.log('request when creating timer: ', req.body.task)
     const task = new Timer(req.body.task)
     const taskCreated = await task.save()
 

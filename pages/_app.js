@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
     <Head>
-     <title>@time-stamp - Track your time, everywhere!</title>
+     <title>Payrole - Track your time, everywhere!</title>
         <meta property={"og:title"} content={"@time-stamp - Track your time, everywhere!"} />
         <meta
           property="og:image"

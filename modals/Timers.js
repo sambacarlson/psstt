@@ -15,6 +15,16 @@ const TimerSchema = new mongoose.Schema({
     type: Number,
     default: new Date()
   },
+  type: {
+    type: String,
+    enum: ['automatic', 'manl'],
+    default: 'automatic',
+  },
+  status: {
+    type: String,
+    enum: ['running', 'closed'],
+    default: 'running'
+  },
   finishTime: {
     type: Number,
   },

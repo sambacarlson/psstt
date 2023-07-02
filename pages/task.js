@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { VStack, Button, Heading, LightMode, Input, Text, HStack } from "@chakra-ui/react";
+import { VStack, Button, Heading, LightMode, Input, Text, HStack, Center, useColorModeValue } from "@chakra-ui/react";
 import CreatableSelect from "react-select/creatable";
 import axios from "axios";
 import Link from "next/link";
@@ -22,9 +22,7 @@ const dot = (color = "transparent") => ({
 });
 
 export default function Tags() {
-  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTag, setSelectedTag] = useState(null);
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
   const [hours, setHours] = useState(1);
@@ -32,34 +30,18 @@ export default function Tags() {
   const session = useSession()
   const router = useRouter()
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/tag")
-  //     .then((res) => setTags(res.data))
-  //     .catch((err) => {
-  //       console.log(err)
-  //       alert(err?.response?.data || "Internal Server Error :)");
-  //     })
-  //     .finally(() => setLoading(false));
-  // }, []);
-
-  // const createTag = (tag) => {
-  //   setLoading(true);
-  //   axios
-  //     .post("/api/tag", { tag })
-  //     .then((res) => {
-  //       setTags([...tags, tag]);
-  //     })
-  //     .catch((err) => console.log(err))
-  //     .finally(() => setLoading(false));
-  // };
+  useEffect(() => {
+    if (!session?.data?.user) {
+      router.push('/401')
+    }
+  }, [])
 
   const createTask = () => {
     let task = {
       dailyCheckId: session?.data?.dailyCheckId,
       name: taskName,
       description,
-      estimatedTime: (hours * 1 * 60) + (minutes * 1)
+      estimatedTime: (hours * 1 * 60) + (minutes * 1),
     }
     setLoading(true)
     axios.post('/api/tag', {
@@ -71,38 +53,47 @@ export default function Tags() {
   }
   return (
     <VStack
-      alignItems="left"
-      p={2}
-      mt={3}
-      width="400px"
-      maxWidth="100%"
+      w="400px"
+      // maxW="100%"
       mx="auto"
+      alignItems="left"
+      role={"group"}
+      p={6}
+      maxW={"420px"}
+      // w={"full"}
+      bg={useColorModeValue("white", "gray.800")}
+      boxShadow={"2xl"}
+      rounded={"lg"}
+      pos={"relative"}
+      zIndex={1}
     >
-      <Heading as="h1" size="sm">
-        {" "}
-        Create a task
-      </Heading>
+      <Center>
+        <Heading as="h1" size="lg" color={'#5AD8C4'}>
+          {" "}
+          Create a task
+        </Heading>
+      </Center>
 
 
       <>
         <Text>Task name</Text>
-        <Input placeholder="Task name" onChange={(e) => setTaskName(e.target.value)} />
+        <Input placeholder="Task name" onChange={(e) => setTaskName(e.target.value)} borderColor={'#5AD8C4'}/>
       </>
 
       <>
         <Text>Description</Text>
-        <Input placeholder="Task description" onChange={(e) => setDescription(e.target.value)} size="lg" />
+        <Input placeholder="Task description" onChange={(e) => setDescription(e.target.value)} size="lg" borderColor={'#5AD8C4'}/>
       </>
 
       <>
         <Text>Estimated time (in hours)</Text>
         <HStack spacing={15}>
           <HStack>
-            <Input w={'20'} type="number" onChange={(e) => setHours(e.target.value)} />
+            <Input w={'20'} type="number" onChange={(e) => setHours(e.target.value)} borderColor={'#5AD8C4'}/>
             <Text>Hours</Text>
           </HStack>
           <Text> : </Text>
-          <Input w={'20'} type="number" onChange={(e) => setMinutes(e.target.value)} />
+          <Input w={'20'} type="number" onChange={(e) => setMinutes(e.target.value)} borderColor={'#5AD8C4'} />
           <Text>Minutes</Text>
         </HStack>
       </>
@@ -110,28 +101,32 @@ export default function Tags() {
       <a>
         <Button
           isFullWidth
-          colorScheme="green"
+          bgColor={'#5AD8C4'}
+          color="black"
           variant="solid"
           // disabled={!selectedTag}
           size="sm"
           onClick={createTask}
+          borderRadius={'3xl'}
         >
           GO
         </Button>
       </a>
       {/* </Link> */}
-      {/* <Link href={`/back-date?tag=${selectedTag?.value}`}> */}
-      <a>
-        <Button
-          isFullWidth
-          colorScheme="green"
-          variant="outline"
-        // disabled={!selectedTag}
-        >
-          Back Date
-        </Button>
-      </a>
-      {/* </Link> */}
+      <Link href={`/back-date`}>
+        <a>
+          <Button
+            isFullWidth
+            variant="outline"
+            borderRadius={'3xl'}
+            borderWidth={1}
+            borderColor={'#5AD8C4'}
+          // disabled={!selectedTag}
+          >
+            Input manually
+          </Button>
+        </a>
+      </Link>
     </VStack>
   );
 }

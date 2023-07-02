@@ -13,7 +13,7 @@ import {
   Avatar,
   HStack,
   IconButton,
-  useColorMode
+  useColorMode,
 } from "@chakra-ui/react";
 
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
@@ -22,74 +22,79 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { CgDarkMode } from "react-icons/cg";
 import axios from "axios";
+import Image from "next/image";
 
 export default function WithSubnavigation({ children }) {
   const { isOpen, onToggle } = useDisclosure();
   const { toggleColorMode } = useColorMode();
   const session = useSession();
 
-  console.log('session: ',session)
 
-
-  const signout =  () => {
+  const signout = () => {
     axios
-    .get("/api/dailyCheck")
-    .then((res) => {
-      console.log('response from signing out: ',res)
-      signOut()
-    })
-    .catch((err) => console.log(err))
+      .get("/api/dailyCheck")
+      .then((res) => {
+        console.log('response from signing out: ', res)
+        signOut()
+      })
+      .catch((err) => console.log(err))
   }
   return (
-    <Box>
-      <HStack mx="auto" m={2}>
-        {session?.data ? (
-          <>
-          <Link href="/">
-            <a>
-              <Avatar
-                size="lg"
-                name={session?.data?.user?.name}
-                src={session?.data?.user?.image}
-              />
-            </a>
-          </Link>
-          <Button
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-            onClick={signout}
-          >
-            Sign Out
-          </Button>
-          </>
-        ) : (
-          <Button
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-            onClick={() => signIn('google')}
-          >
-            Sign In
-          </Button>
-        )}
-        <IconButton
+    <Box >
+      <HStack mx={5} my={2} justifyContent={'space-between'}>
+        {/* <IconButton
           variant="unstyled"
           onClick={toggleColorMode}
           icon={<Icon as={CgDarkMode} />}
           fontSize="xx-large"
           mt="-10px"
-        />
+        /> */}
+        <Image src={require('../../assets/logo.png')} width={80} height={30} />
+        <HStack  justifyContent={'flex-end'} w={'50%'} columnGap={20}>
+          <Button variant="link" color={"#5AD8C4"}>Home</Button>
+          <Button variant="link"  disabled>How it works</Button>
+          {session?.data ? (
+            <>
+              <Button
+                fontSize={"sm"}
+                fontWeight={400}
+                color={"#5AD8C4"}
+                variant="outline"
+                borderRadius={'3xl'}
+                href={"#"}
+                borderWidth={1}
+                borderColor={"#5AD8C4"}
+                onClick={signout}
+              >
+                Sign Out
+              </Button>
+              <Link href="/">
+                <a>
+                  <Avatar
+                    size="lg"
+                    name={session?.data?.user?.name}
+                    src={session?.data?.user?.image}
+                  />
+                </a>
+              </Link>
+            </>
+          ) : (
+            <Button
+              fontSize={"sm"}
+              fontWeight={400}
+              color={"#5AD8C4"}
+              variant="outline"
+              borderRadius={'3xl'}
+              href={"#"}
+              borderWidth={1}
+              borderColor={"#5AD8C4"}
+              onClick={() => signIn('google')}
+            >
+              Sign In
+            </Button>
+          )}
+
+        </HStack>
       </HStack>
 
       {children}
